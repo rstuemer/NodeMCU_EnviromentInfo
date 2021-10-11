@@ -5,6 +5,16 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+
+
+WiFiUDP ntpUDP;
+
+// You can specify the time server pool and the offset (in seconds, can be
+// changed later with setTimeOffset() ). Additionaly you can specify the
+// update interval (in milliseconds, can be changed using setUpdateInterval() ).
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
 
 void setup() {
     // put your setup code here, to run once:
@@ -30,9 +40,16 @@ void setup() {
     
     //if you get here you have connected to the WiFi
     Serial.println("connected...yeey :)");
+
+     timeClient.begin();
+
 }
 
 void loop() {
     // put your main code here, to run repeatedly:
-    
+     timeClient.update();
+
+  Serial.println(timeClient.getFormattedTime());
+
+  delay(1000);
 }
